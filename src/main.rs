@@ -75,7 +75,7 @@ Try something like this:
 fn check_host_port_default(socket_info: Result<SocketInfo, &RawStr>) -> status::Custom<String> {
     let query_opts = QueryOptions {
         good: Some(HTTPStatus(Status::Ok)),
-        bad: Some(HTTPStatus(Status::BadRequest)),
+        bad: Some(HTTPStatus(Status::ServiceUnavailable)),
         timeout: Some(1),
     };
     check_host_port(socket_info, Some(query_opts))
@@ -95,7 +95,7 @@ fn check_host_port(socket_info: Result<SocketInfo, &RawStr>, query_opts: Option<
         };
         let bad = match qopts.bad {
             Some(bad) => bad,
-            None => HTTPStatus(Status::BadRequest),
+            None => HTTPStatus(Status::ServiceUnavailable),
         };
         let timeout = match qopts.timeout {
             Some(timeout) => timeout,
@@ -104,7 +104,7 @@ fn check_host_port(socket_info: Result<SocketInfo, &RawStr>, query_opts: Option<
         (good, bad, timeout)
     }
     else {
-        (HTTPStatus(Status::Ok), HTTPStatus(Status::BadRequest), 1)
+        (HTTPStatus(Status::Ok), HTTPStatus(Status::ServiceUnavailable), 1)
     };
 
     if let Ok(stream) = TcpStream::connect_timeout(&socket_info.socket_addr, Duration::new(timeout, 0)) {

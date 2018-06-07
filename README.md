@@ -5,7 +5,7 @@ A single-binary web server to probe whether hosts are reachable on certain ports
 
 This tool is a very simple web server that takes requests on HTTP to check
 whether they are connectable on a provided port. It returns 200 by default if
-the port is connectable and 400 if it isn't.
+the port is connectable and 503 if it isn't.
 
 ## Installation
 
