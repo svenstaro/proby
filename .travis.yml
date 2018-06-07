@@ -1,0 +1,68 @@
+language: rust
+cache: cargo
+
+rust:
+  - stable
+  - beta
+  - nightly
+
+addons:
+  apt:
+    packages:
+      - mingw-w64
+      - upx
+      - musl
+      - musl-dev
+      - musl-tools
+
+matrix:
+  allow_failures:
+    - rust: stable
+    - rust: beta
+  include:
+    - env:
+      - TARGET=x86_64-unknown-linux-musl
+      - BIN_NAME=proby
+      - PROPER_NAME=proby-linux
+      os: linux
+    - env:
+      - TARGET=x86_64-pc-windows-gnu
+      - BIN_NAME=proby.exe
+      - PROPER_NAME=proby-win.exe
+      - RUSTFLAGS="-C linker=x86_64-w64-mingw32-gcc"
+      os: linux
+    - env:
+      - TARGET=x86_64-apple-darwin
+      - BIN_NAME=proby
+      - PROPER_NAME=proby-osx
+      os: osx
+
+before_install:
+  - rustup self update
+
+install:
+  # On Apple, the default target is already the right one.
+  - if [[ -n $TARGET && $TARGET != "x86_64-apple-darwin" ]]; then rustup target add $TARGET; fi
+
+script:
+  # If this is a normal, non-deployment build...
+  - if [[ -z $TARGET ]]; then cargo build --verbose; fi
+  - if [[ -n $TARGET ]]; then cargo build --verbose --release --target $TARGET; fi
+
+before_deploy:
+  # If this is a binary deployment...
+  - if [[ -n $TARGET ]]; then cp -a target/$TARGET/release/$BIN_NAME $PROPER_NAME && strip $PROPER_NAME; fi
+  - # Run upx on the binary if this is a deployment for Linux or Windows
+  - if [[ $TARGET = "x86_64-pc-windows-gnu" ]]; then upx $PROPER_NAME; fi
+  - if [[ $TARGET = "x86_64-unknown-linux-musl" ]]; then upx $PROPER_NAME; fi
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: "eypQh0Ccg3UuGM4Jh0aEOMUgb/RU+vw5plHJkdB5X18pXfkjt9UaHaBMu/3qMDVYoBz3/WbTEhSZ1eKdeUpNQKYBXEMr1fint7kSGhtJQjiats3FOP9Vflrjc5HxW2MEKq+5pTOqMt668njxvk6cU6ysuTq12oyf+54GUF3lZ9tgHhJ0fe20ayKTBpg32AazRH7E/Y2XRC9IbD2HvbINgwkTFPFFkQL+k0LR9NuD0/4+fc3jzC1gAjkBeQjnyQjhiWLHcl3cJkIdkH6oA/ZQ3ZmrHawbIUJIV6Lz3ltz4wd7x1nm0OIiSB3qGsnMGBGYCWFMGe298QCtbzWf6dNlHNzltCfo4qgeLVlFJWPkiO6Lu0lYI2kDGH25XD559bL/xO2m54QSAeupYkorB26iYIxLvTKjgROJUEkMz2X4nrPz2blXLTKBpIgNscjN6s+ZeD6cDCGeZRMt4xhpiYpdyMR/k+ydQZ56FJomfVIGpvBDzUz4LIMK2sjRl4orjxYfWfhqsn5iIdFsGGPmqPbnJIQvgq1H5MNVBRxuGsecy3lRHseuW8NZzw4EXVWb1NLUKXd20IzKIkV2rXUEqIiqCfUJo8Yic5BDzXxEGMUy//wJn68RIcDKxiGCBfOZ96ITlTxQhJi8QBXu6cfSWRw3D9tnnFXXtVLLg/erEM1xx44="
+    file: $PROPER_NAME
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+      condition: $TRAVIS_RUST_VERSION = stable && -n $TARGET
