@@ -1,4 +1,4 @@
-# proby
+# proby [![Build Status](https://travis-ci.com/svenstaro/proby.svg?branch=master)](https://travis-ci.com/svenstaro/proby)
 Probe whether hosts are reachable on certain ports and return result on HTTP
 
 ## What is this
