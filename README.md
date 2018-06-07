@@ -7,6 +7,11 @@ This tool is a very simple web server that takes requests on HTTP to check
 whether they are connectable on a provided port. It returns 200 by default if
 the port is connectable and 400 if it isn't.
 
+## Installation
+
+Just grab one of the statically linked builds from the [Releases
+page](https://github.com/svenstaro/proby/releases) and you're good to go!
+
 ## Building
 
 You need a recent Rust nightly installed. It is recommended to use
