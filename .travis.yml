@@ -25,17 +25,20 @@ matrix:
       - BIN_NAME=proby
       - PROPER_NAME=proby-linux
       os: linux
+      rust: nightly
     - env:
       - TARGET=x86_64-pc-windows-gnu
       - BIN_NAME=proby.exe
       - PROPER_NAME=proby-win.exe
       - RUSTFLAGS="-C linker=x86_64-w64-mingw32-gcc"
       os: linux
+      rust: nightly
     - env:
       - TARGET=x86_64-apple-darwin
       - BIN_NAME=proby
       - PROPER_NAME=proby-osx
       os: osx
+      rust: nightly
 
 before_install:
   - rustup self update
