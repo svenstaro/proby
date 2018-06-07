@@ -1,6 +1,6 @@
 [package]
 name = "proby"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
 
 [dependencies]
