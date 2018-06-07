@@ -1,0 +1,9 @@
+[package]
+name = "proby"
+version = "0.1.0"
+authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
+
+[dependencies]
+rocket = "0.3"
+rocket_codegen = "0.3"
+failure = "0.1"
