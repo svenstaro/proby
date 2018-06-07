@@ -63,7 +63,7 @@ struct QueryOptions {
 #[get("/")]
 fn usage(rocket_config: State<RocketConfig>) -> String {
     format!("
-proby v0.1.0
+proby v0.1.1
 Try something like this:
 
     curl {host}:{port}/example.com:1337
