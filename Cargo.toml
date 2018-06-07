@@ -6,7 +6,7 @@ description = "A single-binary web server to probe whether hosts are reachable o
 repository = "https://github.com/svenstaro/proby"
 license = "MIT"
 readme = "README.md"
-keywords = ["http-server", "probe", "http", "server", "tcp", "port"]
+keywords = ["http-server", "probe", "http", "tcp", "port"]
 categories = ["command-line-utilities", "command-line-interface", "network-programming", "web-programming::http-server"]
 
 [badges]
