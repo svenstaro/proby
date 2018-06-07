@@ -6,4 +6,3 @@ authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
 [dependencies]
 rocket = "0.3"
 rocket_codegen = "0.3"
-failure = "0.1"
