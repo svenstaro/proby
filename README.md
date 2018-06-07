@@ -30,7 +30,7 @@ or
 
 Example request for checking whether port 1337 is connectable on host example.com:
 
-    curl localhost:8000/example.com/1337
+    curl localhost:8000/example.com:1337
 
 This will return 200 if it is connectable and 400 if it isn't.
 

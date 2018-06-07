@@ -6,7 +6,6 @@ extern crate rocket;
 
 use std::time::Duration;
 use std::net::{Shutdown, TcpStream, ToSocketAddrs, SocketAddr};
-use std::error::Error;
 
 use rocket::State;
 use rocket::http::{RawStr, Status};
@@ -18,14 +17,20 @@ struct RocketConfig {
     port: u16,
 }
 
-struct SocketAddrToSocketAddrs(SocketAddr);
+struct SocketInfo {
+    original_host: String,
+    socket_addr: SocketAddr,
+}
 
-impl<'r> FromParam<'r> for SocketAddrToSocketAddrs {
+impl<'r> FromParam<'r> for SocketInfo {
     type Error = &'r RawStr;
 
     fn from_param(param: &'r RawStr) -> Result<Self, Self::Error> {
-        let mut socket_addrs = param.as_str().to_socket_addrs().map_err(|_| param)?;
-        Ok(SocketAddrToSocketAddrs(socket_addrs.next().ok_or("Weird bug happened")?))
+        let mut socket_addrs = param.as_str().to_socket_addrs().map_err(|_| "Error while parsing host or port")?;
+        Ok(SocketInfo {
+            socket_addr: socket_addrs.next().ok_or("Weird bug happened")?,
+            original_host: param.to_string(),
+        })
     }
 }
 
@@ -40,16 +45,17 @@ Try something like this:
     ", host=rocket_config.hostname, port=rocket_config.port)
 }
 
-#[get("/<host_socket>")]
-fn check_host_port(host_socket: SocketAddrToSocketAddrs) -> Result<status::Custom<String>, String> {
-    // let mut ip_addr = (hostname.as_str(), port).to_socket_addrs().unwrap();
-    // let socket_addr = ip_addr.next().unwrap();
-    let SocketAddrToSocketAddrs(socket_addr) = host_socket;
-    if let Ok(stream) = TcpStream::connect_timeout(&socket_addr, Duration::new(1, 0)) {
+#[get("/<socket_info>")]
+fn check_host_port(socket_info: Result<SocketInfo, &RawStr>) -> status::Custom<String> {
+    let socket_info = match socket_info {
+        Ok(s) => s,
+        Err(e) => return status::Custom(Status::UnprocessableEntity, e.to_string()),
+    };
+    if let Ok(stream) = TcpStream::connect_timeout(&socket_info.socket_addr, Duration::new(1, 0)) {
         stream.shutdown(Shutdown::Both).expect("Couldn't tear down TCP connection");
-        Ok(status::Custom(Status::from_code(200).unwrap(), "Host is connectable on port".to_owned()))
+        status::Custom(Status::from_code(200).unwrap(), format!("{} is connectable", socket_info.original_host))
     } else {
-        Ok(status::Custom(Status::from_code(400).unwrap(), "Host is not connectable on port".to_owned()))
+        status::Custom(Status::from_code(400).unwrap(), format!("{} is NOT connectable", socket_info.original_host))
     }
 }
 
