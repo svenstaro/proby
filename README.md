@@ -36,17 +36,17 @@ This will return 200 if it is connectable and 400 if it isn't.
 
 You can also use IPv4s or IPv6s, of course:
 
-    curl localhost:8000/8.8.8.8/1337
-    curl localhost:8000/2001:4860:4860::8888/1337
+    curl localhost:8000/8.8.8.8:1337
+    curl localhost:8000/2001:4860:4860::8888:1337
 
 If you'd like to customize the return codes, you can do so by setting the
 request parameters `good` and `bad` like so:
 
-    curl localhost:8000/example.com/1337?good=201&bad=401
+    curl localhost:8000/example.com:1337?good=201&bad=401
 
 You can also configure a timeout (in seconds) using:
 
-    curl localhost:8000/example.com/1337?timeout=2
+    curl localhost:8000/example.com:1337?timeout=2
 
 The default timeout is one second.
 
