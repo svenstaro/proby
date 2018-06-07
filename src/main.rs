@@ -62,12 +62,12 @@ struct QueryOptions {
 
 #[get("/")]
 fn usage(rocket_config: State<RocketConfig>) -> String {
-    format!("
-proby v0.1.3
+    format!("proby v0.1.4
+
 Try something like this:
 
-    curl {host}:{port}/example.com:1337
-    ", host=rocket_config.hostname, port=rocket_config.port)
+    curl {host}:{port}/example.com:1337",
+    host=rocket_config.hostname, port=rocket_config.port)
 }
 
 // This route duplication should get better in rocket 0.4 (https://github.com/SergioBenitez/Rocket/issues/608)

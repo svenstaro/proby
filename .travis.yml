@@ -19,6 +19,7 @@ matrix:
   allow_failures:
     - rust: stable
     - rust: beta
+    - env: TARGET=x86_64-pc-windows-gnu
   include:
     - env:
       - TARGET=x86_64-unknown-linux-musl
@@ -62,7 +63,7 @@ before_deploy:
 deploy:
   - provider: releases
     api_key:
-      secure: "gJ+/g8sPPkE3qevVdZYJFcJQPjBMqTrCJSW+0gOki7GezCQy8aW24YU/e3lhDKIgkjvopDTO8u/iXgmppigXJZhiLycAFw21e9Mi3hLEAzYFKd6wo6udYP2Rdd9PhFJOH6dGf1EUr10QoDwmzXYbVRP7/mQML5uz3zzVWmpAtFRe+jR03jxQ1yU186c1Tim+xOxZ8vsssjqAFhi1YiY5ksGEatwakZi5+i5iLQlO5Y8uPQI7x4ArYTr/wXy+glNXS5tK0u3+eKKsReB+0SY2j8wsaM6lh559m7LNHwiIUMuYqaqB5cgmlmhncq5LsViea5nRmZ/JkNDQf6GTZGdTbdAnaKu+67cVrlaETXiYVaiLAR7xxVQbv7CxfmIiJ5K8HpN3AKvf8XJlI+uqfScLIiiVix+hhaaBVPuvw2eWm1ta8BRzNoTZhdKZs+IRBGTeOhmWXd1qicCDj2zGF8sv51Ogr3C6NJCPTzO1t2hTMm5rlr+0cLYByhiN3osCF+LTrBPYFSd9BoqVLalD1cLJ7eurZeXu4gOgjGm0KIvLG5mNEY4CxhHxT4NBVmCUQOnIz5CpN818x6dOzfvDmxyG+ZsH6R20kAnNupMkYnDYzpfFV23/y0ONVMFGJ2sSYsCve24dlEXODXdiHUYeud2lDlqJ2Eb7WLQkghZVrkUoPew="
+      secure: "a07wImCHn9f0yx+RE4hlgT8UfkUxpaMQOxvr+NYECTbVxd39xwoa2z0EHPffLMGsayFcy93/8qmp41B1ntkX7M1nG4XQFTWy7nyNYZtPODNXbF+ZcVzHVukFCy4UHGUnReEorGDbOdlqB9N9CQHtFguWLU7gQ/CV5XmKJsWEy1MofhN/klXSLX7g24rW5dp2ss8Bt9pzSpFvpdXkHU9NVvHDPuIa+QvTFD5rD+tRCx6B6dEcX/h6RtKlk92Pv+hFE+1PvfpqKdvKQSdjIPxbq70uJvHl4ARvO9mqrVX1nYUan9Lw0lD0XptzFYJc5qHCJDjBT93gDgG7im3c3hlY80NbxKkhdftVA9Ii4b95IHri2BCD/fuBg1Yqy/2pHj+oe+MOSPWaUcb67ZQxW8OQU0n8hNlm+4EDykdNOtYuTh7LFLTioItj9CVRPfpHWqfvcu6m3rFEL3xAjc0VPcis17kxVl9O4F6cU0ndUIl0iVDnd0p3hW/CkDNg3uUC269jaxy9YoyYoGI8gW2lYnr8DgNO7LhGx1sgqH8LETFh4tpWCeVo1iDaqfVUqX5hJpq7qKoPwmlAhZ1zwwPUdT9iJyQB1rgY4CiuxwYDmzWbQBafkTEXIlVfx+wweXTHPyaUl+6YARW0bLBZLjjlOFH0BRTao2wgWe6O2hnPTJ4Q9pI="
     file: $PROPER_NAME
     skip_cleanup: true
     on:
