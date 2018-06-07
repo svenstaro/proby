@@ -1,5 +1,5 @@
 # proby [![Build Status](https://travis-ci.com/svenstaro/proby.svg?branch=master)](https://travis-ci.com/svenstaro/proby)
-A single-binary web server to probe whether hosts are reachable on certain ports and return result on HTTP
+A single-binary web server to probe whether hosts are reachable on certain ports and return result on HTTP. Its intended purpose is to be a bridge server for services that can only probe container or application health on HTTP.
 
 ## What is this
 
