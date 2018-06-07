@@ -19,8 +19,13 @@ matrix:
   allow_failures:
     - rust: stable
     - rust: beta
-    - rust: nightlky
-      env: TARGET=x86_64-pc-windows-gnu
+    - rust: nightly
+      env:
+      - TARGET=x86_64-pc-windows-gnu
+      - BIN_NAME=proby.exe
+      - PROPER_NAME=proby-win.exe
+      - RUSTFLAGS="-C linker=x86_64-w64-mingw32-gcc"
+      os: linux
   include:
     - env:
       - TARGET=x86_64-unknown-linux-musl
