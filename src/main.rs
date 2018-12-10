@@ -1,15 +1,15 @@
-#![feature(plugin, custom_derive)]
-#![plugin(rocket_codegen)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
+#[macro_use]
 extern crate rocket;
 
+use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
-use std::net::{Shutdown, TcpStream, ToSocketAddrs, SocketAddr};
 
-use rocket::State;
 use rocket::http::{RawStr, Status};
+use rocket::request::{FromFormValue, FromParam};
 use rocket::response::status;
-use rocket::request::{FromParam, FromFormValue};
+use rocket::State;
 
 struct RocketConfig {
     hostname: String,
@@ -25,7 +25,10 @@ impl<'r> FromParam<'r> for SocketInfo {
     type Error = &'r RawStr;
 
     fn from_param(param: &'r RawStr) -> Result<Self, Self::Error> {
-        let mut socket_addrs = param.as_str().to_socket_addrs().map_err(|_| "Error while parsing host or port")?;
+        let mut socket_addrs = param
+            .as_str()
+            .to_socket_addrs()
+            .map_err(|_| "Error while parsing host or port")?;
         Ok(SocketInfo {
             socket_addr: socket_addrs.next().ok_or("Weird bug happened")?,
             original_host: param.to_string(),
@@ -47,71 +50,56 @@ impl<'v> FromFormValue<'v> for HTTPStatus {
                 } else {
                     Err(RawStr::from_str("Invalid HTTP status code"))
                 }
-            },
+            }
             _ => Err(form_value),
         }
     }
 }
 
-#[derive(FromForm, Clone, Debug)]
-struct QueryOptions {
-    good: Option<HTTPStatus>,
-    bad: Option<HTTPStatus>,
-    timeout: Option<u64>,
-}
-
 #[get("/")]
 fn usage(rocket_config: State<RocketConfig>) -> String {
-    format!("proby v0.1.4
+    format!(
+        "proby v0.1.4
 
 Try something like this:
 
     curl {host}:{port}/example.com:1337",
-    host=rocket_config.hostname, port=rocket_config.port)
+        host = rocket_config.hostname,
+        port = rocket_config.port
+    )
 }
 
-// This route duplication should get better in rocket 0.4 (https://github.com/SergioBenitez/Rocket/issues/608)
-#[get("/<socket_info>")]
-fn check_host_port_default(socket_info: Result<SocketInfo, &RawStr>) -> status::Custom<String> {
-    let query_opts = QueryOptions {
-        good: Some(HTTPStatus(Status::Ok)),
-        bad: Some(HTTPStatus(Status::ServiceUnavailable)),
-        timeout: Some(1),
-    };
-    check_host_port(socket_info, Some(query_opts))
-}
-
-#[get("/<socket_info>?<query_opts>")]
-fn check_host_port(socket_info: Result<SocketInfo, &RawStr>, query_opts: Option<QueryOptions>) -> status::Custom<String> {
+#[get("/<socket_info>?<good>&<bad>&<timeout>")]
+fn check_host_port(
+    socket_info: Result<SocketInfo, &RawStr>,
+    good: Option<HTTPStatus>,
+    bad: Option<HTTPStatus>,
+    timeout: Option<u64>,
+) -> status::Custom<String> {
     let socket_info = match socket_info {
         Ok(s) => s,
         Err(e) => return status::Custom(Status::UnprocessableEntity, e.to_string()),
     };
 
-    let (HTTPStatus(good_status), HTTPStatus(bad_status), timeout) = if let Some(qopts) = query_opts {
-        let good = match qopts.good {
-            Some(good) => good,
-            None => HTTPStatus(Status::Ok),
-        };
-        let bad = match qopts.bad {
-            Some(bad) => bad,
-            None => HTTPStatus(Status::ServiceUnavailable),
-        };
-        let timeout = match qopts.timeout {
-            Some(timeout) => timeout,
-            None => 1,
-        };
-        (good, bad, timeout)
-    }
-    else {
-        (HTTPStatus(Status::Ok), HTTPStatus(Status::ServiceUnavailable), 1)
-    };
+    let HTTPStatus(good_status) = good.unwrap_or(HTTPStatus(Status::Ok));
+    let HTTPStatus(bad_status) = bad.unwrap_or(HTTPStatus(Status::ServiceUnavailable));
+    let timeout = timeout.unwrap_or(1);
 
-    if let Ok(stream) = TcpStream::connect_timeout(&socket_info.socket_addr, Duration::new(timeout, 0)) {
-        stream.shutdown(Shutdown::Both).expect("Couldn't tear down TCP connection");
-        status::Custom(good_status, format!("{} is connectable", socket_info.original_host))
+    if let Ok(stream) =
+        TcpStream::connect_timeout(&socket_info.socket_addr, Duration::new(timeout, 0))
+    {
+        stream
+            .shutdown(Shutdown::Both)
+            .expect("Couldn't tear down TCP connection");
+        status::Custom(
+            good_status,
+            format!("{} is connectable", socket_info.original_host),
+        )
     } else {
-        status::Custom(bad_status, format!("{} is NOT connectable", socket_info.original_host))
+        status::Custom(
+            bad_status,
+            format!("{} is NOT connectable", socket_info.original_host),
+        )
     }
 }
 
@@ -124,6 +112,6 @@ fn main() {
     };
     rocket
         .manage(rocket_config)
-        .mount("/", routes![usage, check_host_port_default, check_host_port])
+        .mount("/", routes![usage, check_host_port])
         .launch();
 }

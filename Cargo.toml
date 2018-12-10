@@ -8,6 +8,7 @@ license = "MIT"
 readme = "README.md"
 keywords = ["http-server", "probe", "http", "tcp", "port"]
 categories = ["command-line-utilities", "command-line-interface", "network-programming", "web-programming::http-server"]
+edition = "2018"
 
 [badges]
 travis-ci = { repository = "svenstaro/proby", branch = "master" }
@@ -17,5 +18,4 @@ maintenance = { status = "actively-developed" }
 lto = true
 
 [dependencies]
-rocket = "0.3"
-rocket_codegen = "0.3"
+rocket = "0.4"
