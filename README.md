@@ -7,7 +7,9 @@
 [![dependency status](https://deps.rs/repo/github/svenstaro/proby/status.svg)](https://deps.rs/repo/github/svenstaro/proby) 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/svenstaro/proby/blob/master/LICENSE)
 
-A single-binary web server to probe whether hosts are reachable on certain ports and return result on HTTP. Its intended purpose is to be a bridge server for services that can only probe container or application health on HTTP.
+**Check whether hosts are reachable on certain ports and return result on HTTP**
+
+Its intended purpose is to be a bridge server for services that can only probe container or application health on HTTP. Oh, and it's just a single binary that works everywhere!
 
 ## What is this
 
