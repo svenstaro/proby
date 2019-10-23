@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable, nightly]
+        rust: [nightly]
 
     steps:
     - uses: hecrj/setup-rust-action@master
