@@ -1,8 +1,5 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-#[macro_use]
-extern crate rocket;
-
 use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
 
@@ -10,12 +7,25 @@ use rocket::http::{RawStr, Status};
 use rocket::request::{FromFormValue, FromParam};
 use rocket::response::status;
 use rocket::State;
+use rocket::{get, routes};
+use structopt::{clap::crate_version, StructOpt};
 
+#[derive(StructOpt, Clone)]
+#[structopt(
+    name = "proby",
+    author,
+    about,
+    global_settings = &[structopt::clap::AppSettings::ColoredHelp],
+)]
+pub struct ProbyConfig {}
+
+#[derive(Debug)]
 struct RocketConfig {
     hostname: String,
     port: u16,
 }
 
+#[derive(Debug)]
 struct SocketInfo {
     original_host: String,
     socket_addr: SocketAddr,
@@ -59,11 +69,12 @@ impl<'v> FromFormValue<'v> for HTTPStatus {
 #[get("/")]
 fn usage(rocket_config: State<RocketConfig>) -> String {
     format!(
-        "proby v0.1.4
+        "proby {version}
 
 Try something like this:
 
     curl {host}:{port}/example.com:1337",
+        version = crate_version!(),
         host = rocket_config.hostname,
         port = rocket_config.port
     )
@@ -105,6 +116,8 @@ fn check_host_port(
 
 fn main() {
     let rocket = rocket::ignite();
+
+    ProbyConfig::from_args();
 
     let rocket_config = RocketConfig {
         hostname: rocket.config().clone().address,

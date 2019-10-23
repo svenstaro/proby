@@ -1,8 +1,8 @@
 [package]
 name = "proby"
-version = "0.1.4"
+version = "0.2.0"
 authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
-description = "A single-binary web server to probe whether hosts are reachable on certain ports and return result on HTTP"
+description = "Check whether hosts are reachable on certain ports and return result on HTTP"
 repository = "https://github.com/svenstaro/proby"
 license = "MIT"
 readme = "README.md"
@@ -19,3 +19,4 @@ lto = true
 
 [dependencies]
 rocket = "0.4"
+structopt = "0.3"
