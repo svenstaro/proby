@@ -1,6 +1,6 @@
 .PHONY: build-linux
 build-linux:
-	cargo build --target x86_64-unknown-linux-musl --release --locked
+	cargo build --target x86_64-unknown-linux-musl --release
 	strip target/x86_64-unknown-linux-musl/release/proby
 	upx target/x86_64-unknown-linux-musl/release/proby
 
