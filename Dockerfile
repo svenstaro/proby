@@ -1,4 +1,4 @@
-FROM rustlang/rust:nightly as builder
+FROM rustlang/rust:stable as builder
 
 ENV APP_HOME /usr/src/app/
 

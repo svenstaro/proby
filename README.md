@@ -4,7 +4,7 @@
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/svenstaro/proby)](https://cloud.docker.com/repository/docker/svenstaro/proby/)
 [![AUR](https://img.shields.io/aur/version/proby.svg)](https://aur.archlinux.org/packages/proby/)
 [![Crates.io](https://img.shields.io/crates/v/proby.svg)](https://crates.io/crates/proby)
-[![dependency status](https://deps.rs/repo/github/svenstaro/proby/status.svg)](https://deps.rs/repo/github/svenstaro/proby) 
+[![dependency status](https://deps.rs/repo/github/svenstaro/proby/status.svg)](https://deps.rs/repo/github/svenstaro/proby)
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/svenstaro/proby/blob/master/LICENSE)
 
 **Check whether hosts are reachable on certain ports and return result on HTTP**
@@ -24,8 +24,7 @@ page](https://github.com/svenstaro/proby/releases) and you're good to go!
 
 ## Building
 
-You need a recent Rust nightly installed. It is recommended to use
-[rustup](https://github.com/rust-lang-nursery/rustup.rs) for this.
+You need a recent stable version of Rust and Cargo installed.
 
 Then just type
 
