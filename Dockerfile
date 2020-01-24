@@ -2,7 +2,7 @@ FROM rust:alpine as builder
 
 ENV APP_HOME /usr/src/app/
 
-RUN apk add --update upx
+RUN apk add --update upx make
 
 COPY . $APP_HOME
 WORKDIR $APP_HOME
