@@ -1,6 +1,6 @@
 [package]
 name = "proby"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
 description = "Check whether hosts are reachable on certain ports and return result on HTTP"
 repository = "https://github.com/svenstaro/proby"
@@ -18,5 +18,11 @@ maintenance = { status = "actively-developed" }
 lto = true
 
 [dependencies]
-rocket = "0.4"
+actix-web = "2.0.0"
+actix-rt = "1.0.0"
 structopt = "0.3"
+anyhow = "1.0"
+serde = "1.0"
+serde_with = "1.4.0"
+http = "0.2"
+futures = "0.3"

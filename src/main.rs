@@ -1,130 +1,158 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
-use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
+use actix_web::{error, get, web, App, HttpResponse, HttpServer};
+use anyhow::{Context, Result};
+use http::StatusCode;
+use serde::de;
+use serde::Deserialize;
+use serde::Deserializer;
+use std::net::IpAddr;
+use std::net::TcpStream;
+use std::net::ToSocketAddrs;
+use std::net::{Shutdown, SocketAddr};
 use std::time::Duration;
+use structopt::clap::crate_version;
+use structopt::StructOpt;
 
-use rocket::http::{RawStr, Status};
-use rocket::request::{FromFormValue, FromParam};
-use rocket::response::status;
-use rocket::State;
-use rocket::{get, routes};
-use structopt::{clap::crate_version, StructOpt};
+use crate::args::ProbyConfig;
 
-#[derive(StructOpt, Clone)]
-#[structopt(
-    name = "proby",
-    author,
-    about,
-    global_settings = &[structopt::clap::AppSettings::ColoredHelp],
-)]
-pub struct ProbyConfig {}
+mod args;
 
-#[derive(Debug)]
-struct RocketConfig {
-    hostname: String,
-    port: u16,
-}
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct SocketInfo {
-    original_host: String,
+    original_str: String,
     socket_addr: SocketAddr,
 }
 
-impl<'r> FromParam<'r> for SocketInfo {
-    type Error = &'r RawStr;
-
-    fn from_param(param: &'r RawStr) -> Result<Self, Self::Error> {
+impl<'de> Deserialize<'de> for SocketInfo {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let param = String::deserialize(deserializer)?;
         let mut socket_addrs = param
             .as_str()
             .to_socket_addrs()
-            .map_err(|_| "Error while parsing host or port")?;
+            .map_err(|_| de::Error::custom("Error while parsing host or port"))?;
         Ok(SocketInfo {
-            socket_addr: socket_addrs.next().ok_or("Weird bug happened")?,
-            original_host: param.to_string(),
+            socket_addr: socket_addrs
+                .next()
+                .ok_or_else(|| de::Error::custom("Weird bug happened"))?,
+            original_str: param,
         })
     }
 }
 
-#[derive(Clone, Debug)]
-struct HTTPStatus(Status);
-
-impl<'v> FromFormValue<'v> for HTTPStatus {
-    type Error = &'v RawStr;
-
-    fn from_form_value(form_value: &'v RawStr) -> Result<HTTPStatus, &'v RawStr> {
-        match form_value.parse::<u16>() {
-            Ok(code) => {
-                if let Some(status) = Status::from_code(code) {
-                    Ok(HTTPStatus(status))
-                } else {
-                    Err(RawStr::from_str("Invalid HTTP status code"))
-                }
-            }
-            _ => Err(form_value),
-        }
-    }
+#[derive(Clone)]
+struct FormattedSockets {
+    data: Vec<String>,
 }
 
 #[get("/")]
-fn usage(rocket_config: State<RocketConfig>) -> String {
+async fn usage(sockets: web::Data<FormattedSockets>) -> String {
+    let examples: String = sockets
+        .data
+        .iter()
+        .map(|x| format!("  curl http://{}/example.com:1337\n", x))
+        .collect();
     format!(
         "proby {version}
 
 Try something like this:
 
-    curl {host}:{port}/example.com:1337",
+{examples}",
         version = crate_version!(),
-        host = rocket_config.hostname,
-        port = rocket_config.port
+        examples = examples,
     )
 }
 
-#[get("/<socket_info>?<good>&<bad>&<timeout>")]
-fn check_host_port(
-    socket_info: Result<SocketInfo, &RawStr>,
-    good: Option<HTTPStatus>,
-    bad: Option<HTTPStatus>,
+#[derive(Debug, Deserialize)]
+struct HttpCode(#[serde(with = "serde_with::rust::display_fromstr")] StatusCode);
+
+#[derive(Debug, Deserialize)]
+struct CheckHostPortOptions {
+    good: Option<HttpCode>,
+    bad: Option<HttpCode>,
     timeout: Option<u64>,
-) -> status::Custom<String> {
-    let socket_info = match socket_info {
-        Ok(s) => s,
-        Err(e) => return status::Custom(Status::UnprocessableEntity, e.to_string()),
-    };
+}
 
-    let HTTPStatus(good_status) = good.unwrap_or(HTTPStatus(Status::Ok));
-    let HTTPStatus(bad_status) = bad.unwrap_or(HTTPStatus(Status::ServiceUnavailable));
-    let timeout = timeout.unwrap_or(1);
+#[get("/{socket_info}")]
+async fn check_host_port(
+    socket_info: web::Path<SocketInfo>,
+    params: web::Query<CheckHostPortOptions>,
+) -> HttpResponse {
+    let good_status = params.good.as_ref().unwrap_or(&HttpCode(StatusCode::OK));
+    let bad_status = params
+        .bad
+        .as_ref()
+        .unwrap_or(&HttpCode(StatusCode::SERVICE_UNAVAILABLE));
+    let timeout = Duration::new(params.timeout.unwrap_or(1), 0);
 
-    if let Ok(stream) =
-        TcpStream::connect_timeout(&socket_info.socket_addr, Duration::new(timeout, 0))
+    let socket_addr = socket_info.socket_addr;
+    if let Ok(stream) = web::block(move || TcpStream::connect_timeout(&socket_addr, timeout)).await
     {
         stream
             .shutdown(Shutdown::Both)
             .expect("Couldn't tear down TCP connection");
-        status::Custom(
-            good_status,
-            format!("{} is connectable", socket_info.original_host),
-        )
+        let good_body = format!("{} is connectable", socket_info.original_str);
+        HttpResponse::with_body(good_status.0, good_body.into())
     } else {
-        status::Custom(
-            bad_status,
-            format!("{} is NOT connectable", socket_info.original_host),
-        )
+        let bad_body = format!("{} is NOT connectable", socket_info.original_str);
+        HttpResponse::with_body(bad_status.0, bad_body.into())
     }
 }
 
-fn main() {
-    let rocket = rocket::ignite();
+/// Convert a `Vec` of interfaces and a port to a `Vec` of `SocketAddr`.
+fn interfaces_to_sockets(interfaces: &[IpAddr], port: u16) -> Result<Vec<SocketAddr>> {
+    interfaces
+        .iter()
+        .map(|&interface| {
+            if interface.is_ipv6() {
+                // If the interface is IPv6 then we'll print it with brackets so that it is
+                // clickable and also because for some reason, actix-web won't it otherwise.
+                format!("[{}]", interface)
+            } else {
+                format!("{}", interface)
+            }
+        })
+        .map(|interface| {
+            format!("{interface}:{port}", interface = &interface, port = port,)
+                .parse::<SocketAddr>()
+        })
+        .collect::<Result<Vec<SocketAddr>, std::net::AddrParseError>>()
+        .context("Error during creation of sockets from interfaces and port")
+}
 
-    ProbyConfig::from_args();
+#[actix_rt::main]
+async fn main() -> Result<()> {
+    let args = ProbyConfig::from_args();
 
-    let rocket_config = RocketConfig {
-        hostname: rocket.config().clone().address,
-        port: rocket.config().port,
+    let socket_addresses = interfaces_to_sockets(&args.interfaces, args.port)?;
+
+    let formatted_sockets = FormattedSockets {
+        data: socket_addresses.iter().map(|x| x.to_string()).collect(),
     };
-    rocket
-        .manage(rocket_config)
-        .mount("/", routes![usage, check_host_port])
-        .launch();
+
+    println!(
+        "proby {version}\n\nServing on:\n{sockets}",
+        version = crate_version!(),
+        sockets = formatted_sockets
+            .data
+            .iter()
+            .map(|x| format!("http://{}\n", x))
+            .collect::<String>()
+    );
+    HttpServer::new(move || {
+        App::new()
+            .data(formatted_sockets.clone())
+            .service(usage)
+            .service(check_host_port)
+            .app_data(web::PathConfig::default().error_handler(|err, _req| {
+                let err_text = err.to_string();
+                error::InternalError::from_response(err, HttpResponse::BadRequest().body(err_text))
+                    .into()
+            }))
+    })
+    .bind(socket_addresses.as_slice())?
+    .run()
+    .await
+    .context("Error while running web server!")
 }
