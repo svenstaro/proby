@@ -2,14 +2,13 @@ FROM rust:alpine as builder
 
 ENV APP_HOME /usr/src/app/
 
-RUN rustup target add x86_64-unknown-linux-musl
-RUN apt-get update && apt-get install -y upx musl-tools
+RUN apk add --update upx
 
 COPY . $APP_HOME
 WORKDIR $APP_HOME
 RUN make build-linux
 
 FROM scratch
-COPY --from=builder /usr/src/app/target/x86_64-unknown-linux-musl/release/proby /app/
+COPY --from=builder /usr/src/app/target/release/proby /app/
 
 ENTRYPOINT ["/app/proby"]
