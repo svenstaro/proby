@@ -1,4 +1,4 @@
-FROM rustlang/rust:stable as builder
+FROM rust:alpine as builder
 
 ENV APP_HOME /usr/src/app/
 
