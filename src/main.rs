@@ -1,6 +1,5 @@
 use actix_web::{error, get, web, App, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
-use async_std::io;
 use http::StatusCode;
 use serde::de;
 use serde::Deserialize;
@@ -88,7 +87,8 @@ async fn check_host_port(
     let timeout = Duration::new(params.timeout.unwrap_or(1), 0);
 
     let socket_addr = socket_info.socket_addr;
-    if let Ok(stream) = web::block(move || TcpStream::connect_timeout(&socket_addr, timeout)).await {
+    if let Ok(stream) = web::block(move || TcpStream::connect_timeout(&socket_addr, timeout)).await
+    {
         stream
             .shutdown(Shutdown::Both)
             .expect("Couldn't tear down TCP connection");
