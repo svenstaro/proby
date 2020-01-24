@@ -101,7 +101,6 @@ async fn check_host_port(
         let good_body = format!("{} is connectable", socket_info.original_str);
         HttpResponse::with_body(good_status.0, good_body.into())
     } else {
-        println!("rofl");
         let bad_body = format!("{} is NOT connectable", socket_info.original_str);
         HttpResponse::with_body(bad_status.0, bad_body.into())
     }
