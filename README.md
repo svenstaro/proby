@@ -22,25 +22,21 @@ the port is connectable and 503 if it isn't.
 Just grab one of the statically linked builds from the [Releases
 page](https://github.com/svenstaro/proby/releases) and you're good to go!
 
-## Building
+## Running
 
-You need a recent stable version of Rust and Cargo installed.
+All you have to do to run proby is to just call it:
 
-Then just type
+    ./proby
 
-    cargo build --release
+If you don't like the default interface and port of proby, you can change it like this:
 
-After the build, a binary will appear here: `target/release/proby`.
+    proby -i 127.0.0.1 -p 9000
 
 ## Usage
 
-Run the application using either
+### Basic
 
-    cargo run --release
-
-or
-
-    target/release/proby
+This makes proby listen only on the local loopback interface at port 9000.
 
 Example request for checking whether port 1337 is connectable on host example.com:
 
@@ -53,6 +49,8 @@ You can also use IPv4s or IPv6s, of course:
     curl localhost:8000/8.8.8.8:1337
     curl localhost:8000/2001:4860:4860::8888:1337
 
+### Advanced
+
 If you'd like to customize the return codes, you can do so by setting the
 request parameters `good` and `bad` like so:
 
@@ -64,10 +62,15 @@ You can also configure a timeout (in seconds) using:
 
 The default timeout is one second.
 
-To change the port this service listens on, specify the `ROCKET_PORT` environment
-variable on launch:
+## Building
 
-    ROCKET_PORT=5555 cargo run --release
+You need a recent stable version of Rust and Cargo installed.
+
+Then just type
+
+    cargo build --release
+
+After the build, a binary will appear here: `target/release/proby`.
 
 ## Releasing
 
