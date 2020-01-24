@@ -1,12 +1,12 @@
 use actix_web::{error, get, web, App, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
 use async_std::io;
-use async_std::net::TcpStream;
 use http::StatusCode;
 use serde::de;
 use serde::Deserialize;
 use serde::Deserializer;
 use std::net::IpAddr;
+use std::net::TcpStream;
 use std::net::ToSocketAddrs;
 use std::net::{Shutdown, SocketAddr};
 use std::time::Duration;
@@ -88,13 +88,7 @@ async fn check_host_port(
     let timeout = Duration::new(params.timeout.unwrap_or(1), 0);
 
     let socket_addr = socket_info.socket_addr;
-    // TODO: Make this nicer once https://github.com/async-rs/async-std/pull/507 is merged.
-    if let Ok(stream) = io::timeout(
-        timeout,
-        async move { TcpStream::connect(&socket_addr).await },
-    )
-    .await
-    {
+    if let Ok(stream) = web::block(move || TcpStream::connect_timeout(&socket_addr, timeout)).await {
         stream
             .shutdown(Shutdown::Both)
             .expect("Couldn't tear down TCP connection");
