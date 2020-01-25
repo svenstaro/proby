@@ -14,6 +14,15 @@ fn parse_interface(src: &str) -> Result<IpAddr, std::net::AddrParseError> {
     global_settings = &[structopt::clap::AppSettings::ColoredHelp],
 )]
 pub struct ProbyConfig {
+    /// Be quiet (log nothing)
+    #[structopt(short, long)]
+    pub quiet: bool,
+
+    /// Be verbose (log data of incoming and outgoing requests). If given twice it will also log
+    /// the body data.
+    #[structopt(short, long, conflicts_with = "quiet")]
+    pub verbose: bool,
+
     /// Interface to bind to
     #[structopt(
         short,

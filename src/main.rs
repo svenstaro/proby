@@ -1,6 +1,7 @@
-use actix_web::{error, get, web, App, HttpResponse, HttpServer};
+use actix_web::{error, get, web, App, HttpRequest, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
 use http::StatusCode;
+use log::info;
 use serde::de;
 use serde::Deserialize;
 use serde::Deserializer;
@@ -76,6 +77,8 @@ struct CheckHostPortOptions {
 
 #[get("/{socket_info}")]
 async fn check_host_port(
+    args: web::Data<ProbyConfig>,
+    req: HttpRequest,
     socket_info: web::Path<SocketInfo>,
     params: web::Query<CheckHostPortOptions>,
 ) -> HttpResponse {
@@ -85,6 +88,21 @@ async fn check_host_port(
         .as_ref()
         .unwrap_or(&HttpCode(StatusCode::SERVICE_UNAVAILABLE));
     let timeout = Duration::new(params.timeout.unwrap_or(1), 0);
+
+    if args.verbose {
+        let params_text = format!(
+            "(good: {}, bad: {}, timeout: {})",
+            good_status.0.as_u16(),
+            bad_status.0.as_u16(),
+            timeout.as_secs()
+        );
+        info!(
+            "{} requesting check of {} {}",
+            req.peer_addr().unwrap(),
+            socket_info.original_str,
+            params_text,
+        );
+    }
 
     let socket_addr = socket_info.socket_addr;
     if let Ok(stream) = web::block(move || TcpStream::connect_timeout(&socket_addr, timeout)).await
@@ -131,17 +149,27 @@ async fn main() -> Result<()> {
         data: socket_addresses.iter().map(|x| x.to_string()).collect(),
     };
 
-    println!(
-        "proby {version}\n\nServing on:\n{sockets}",
-        version = crate_version!(),
-        sockets = formatted_sockets
-            .data
-            .iter()
-            .map(|x| format!("http://{}\n", x))
-            .collect::<String>()
-    );
+    let log_level = if args.quiet {
+        simplelog::LevelFilter::Error
+    } else {
+        simplelog::LevelFilter::Info
+    };
+
+    if simplelog::TermLogger::init(
+        log_level,
+        simplelog::Config::default(),
+        simplelog::TerminalMode::Mixed,
+    )
+    .is_err()
+    {
+        simplelog::SimpleLogger::init(log_level, simplelog::Config::default())
+            .expect("Couldn't initialize logger")
+    }
+
+    info!("proby {version}", version = crate_version!(),);
     HttpServer::new(move || {
         App::new()
+            .data(args.clone())
             .data(formatted_sockets.clone())
             .service(usage)
             .service(check_host_port)
