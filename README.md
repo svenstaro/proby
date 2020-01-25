@@ -76,6 +76,7 @@ After the build, a binary will appear here: `target/release/proby`.
 
 This is mostly a note for me on how to release this thing:
 
+- Add `CHANGELOG.md` entry.
 - Update version in `Cargo.toml`.
 - `git commit` and `git tag -s`, `git push`.
 - `cargo publish`
