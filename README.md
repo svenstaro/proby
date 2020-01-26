@@ -26,7 +26,7 @@ page](https://github.com/svenstaro/proby/releases) and you're good to go!
 
 All you have to do to run proby is to just call it:
 
-    ./proby
+    proby
 
 If you don't like the default interface and port of proby, you can change it like this:
 
@@ -40,25 +40,26 @@ This makes proby listen only on the local loopback interface at port 9000.
 
 Example request for checking whether port 1337 is connectable on host example.com:
 
-    curl localhost:8000/example.com:1337
+    curl localhost:8080/example:1337
+    example:1337 is connectable
 
-This will return 200 if it is connectable and 400 if it isn't.
+This will return 200 if it is connectable and 503 if it isn't.
 
 You can also use IPv4s or IPv6s, of course:
 
-    curl localhost:8000/8.8.8.8:1337
-    curl localhost:8000/2001:4860:4860::8888:1337
+    curl localhost:8080/8.8.8.8:1337
+    curl localhost:8080/2001:4860:4860::8888:1337
 
 ### Advanced
 
 If you'd like to customize the return codes, you can do so by setting the
 request parameters `good` and `bad` like so:
 
-    curl localhost:8000/example.com:1337?good=201&bad=401
+    curl localhost:8080/example.com:1337?good=201&bad=401
 
 You can also configure a timeout (in seconds) using:
 
-    curl localhost:8000/example.com:1337?timeout=2
+    curl localhost:8080/example.com:1337?timeout=2
 
 The default timeout is one second.
 
