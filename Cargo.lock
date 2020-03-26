@@ -28,7 +28,7 @@ dependencies = [
  "derive_more",
  "either",
  "futures 0.3.4",
- "http 0.2.0",
+ "http 0.2.1",
  "log",
  "trust-dns-proto",
  "trust-dns-resolver",
@@ -62,7 +62,7 @@ dependencies = [
  "futures-util",
  "fxhash",
  "h2",
- "http 0.2.0",
+ "http 0.2.1",
  "httparse",
  "indexmap",
  "language-tags",
@@ -98,7 +98,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d7a10ca4d94e8c8e7a87c5173aba1b97ba9a6563ca02b0e1cd23531093d3ec8"
 dependencies = [
  "bytestring",
- "http 0.2.0",
+ "http 0.2.1",
  "log",
  "regex",
  "serde",
@@ -959,7 +959,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "futures-util",
- "http 0.2.0",
+ "http 0.2.1",
  "indexmap",
  "log",
  "slab",
@@ -1008,9 +1008,9 @@ dependencies = [
 
 [[package]]
 name = "http"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b708cc7f06493459026f53b9a61a7a121a5d1ec6238dee58ea4941132b30156b"
+checksum = "28d569972648b2c512421b5f2a405ad6ac9666547189d0c5477a3f200f3e02f9"
 dependencies = [
  "bytes 0.5.4",
  "fnv",
@@ -1445,7 +1445,7 @@ dependencies = [
  "anyhow",
  "assert_cmd",
  "futures 0.3.4",
- "http 0.2.0",
+ "http 0.2.1",
  "log",
  "port_check",
  "serde",
