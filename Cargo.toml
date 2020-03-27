@@ -33,6 +33,6 @@ simplelog = "0.7"
 log = "0.4"
 
 [dev-dependencies]
-assert_cmd = "0.12"
+assert_cmd = "1.0"
 surf = "1"
 port_check = "0.1"
