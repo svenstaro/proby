@@ -22,7 +22,7 @@ panic = 'abort'
 
 [dependencies]
 actix-web = "2.0.0"
-actix-rt = "1.0.0"
+actix-rt = "1.1.0"
 structopt = "0.3"
 anyhow = "1.0"
 serde = "1.0"
