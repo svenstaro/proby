@@ -29,7 +29,7 @@ serde = "1.0"
 serde_with = "1.4.0"
 http = "0.2"
 futures = "0.3"
-simplelog = "0.7"
+simplelog = "0.8"
 log = "0.4"
 
 [dev-dependencies]
