@@ -2,7 +2,9 @@
 
 <!-- next-header -->
 
-# [Unreleased] - ReleaseDate
+## [Unreleased] - ReleaseDate
+
+# [1.0.0] - 2020-07-05
 
 - Start using `cargo release` for release management.
 - Bump deps.

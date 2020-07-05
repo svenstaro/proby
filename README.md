@@ -65,7 +65,7 @@ The default timeout is one second.
 
 ## CLI usage
 
-    proby 0.4.0
+    proby 1.0.0
     Sven-Hendrik Haase <svenstaro@gmail.com>
     Check whether hosts are reachable on certain ports and return result on HTTP
 
