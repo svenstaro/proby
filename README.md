@@ -5,6 +5,7 @@
 [![AUR](https://img.shields.io/aur/version/proby.svg)](https://aur.archlinux.org/packages/proby/)
 [![Crates.io](https://img.shields.io/crates/v/proby.svg)](https://crates.io/crates/proby)
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/svenstaro/proby/blob/master/LICENSE)
+[![Lines of Code](https://tokei.rs/b1/github/svenstaro/proby)](https://github.com/svenstaro/proby)
 
 **Check whether hosts are reachable on certain ports and return result on HTTP**
 
