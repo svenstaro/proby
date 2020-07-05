@@ -80,4 +80,5 @@ This used to be kind of complicated but now it's just:
 
 - `cargo release --dry-run`
 - `cargo release`
+- Releases will automatically be deployed by Github Actions.
 - Update AUR package.
