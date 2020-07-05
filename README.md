@@ -63,6 +63,26 @@ You can also configure a timeout (in seconds) using:
 
 The default timeout is one second.
 
+## CLI usage
+
+    proby 0.4.0
+    Sven-Hendrik Haase <svenstaro@gmail.com>
+    Check whether hosts are reachable on certain ports and return result on HTTP
+
+    USAGE:
+        proby [FLAGS] [OPTIONS]
+
+    FLAGS:
+        -h, --help       Prints help information
+        -q, --quiet      Be quiet (log nothing)
+        -V, --version    Prints version information
+        -v, --verbose    Be verbose (log data of incoming and outgoing requests). If given twice it will also log the body
+                         data
+
+    OPTIONS:
+        -i, --interfaces <interfaces>...    Interface to bind to [default: 0.0.0.0]
+        -p, --port <port>                   Port on which to listen [default: 8080]
+
 ## Building
 
 You need a recent stable version of Rust and Cargo installed.
