@@ -1,10 +1,12 @@
 # Changelog
 
-# [Unreleased]
+<!-- next-header -->
 
-# [0.4.1] - 2020-07-05
+# [Unreleased] - ReleaseDate
 
-- Bump deps
+- Start using `cargo release` for release management.
+- Bump deps.
+- Removed badges from `Cargo.toml`. They're being phased out.
 
 # [0.4.0] - 2020-01-25
 

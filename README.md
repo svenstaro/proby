@@ -75,11 +75,9 @@ After the build, a binary will appear here: `target/release/proby`.
 
 ## Releasing
 
-This is mostly a note for me on how to release this thing:
+This is mostly a note for me on how to release this thing.
+This used to be kind of complicated but now it's just:
 
-- Add `CHANGELOG.md` entry.
-- Update version in `Cargo.toml`.
-- `git commit` and `git tag -s`, `git push`.
-- `cargo publish`
-- Releases will automatically be deployed by Github Actions.
+- `cargo release --dry-run`
+- `cargo release`
 - Update AUR package.
