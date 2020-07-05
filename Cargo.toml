@@ -1,6 +1,6 @@
 [package]
 name = "proby"
-version = "1.0.0"
+version = "1.0.1-alpha.0"
 authors = ["Sven-Hendrik Haase <svenstaro@gmail.com>"]
 description = "Check whether hosts are reachable on certain ports and return result on HTTP"
 repository = "https://github.com/svenstaro/proby"
