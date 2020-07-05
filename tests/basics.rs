@@ -1,7 +1,7 @@
 mod utils;
 
-use std::io::Read;
 use assert_cmd::prelude::*;
+use std::io::Read;
 use std::process::Command;
 use structopt::clap::{crate_name, crate_version};
 use surf;
