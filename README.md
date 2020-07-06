@@ -14,8 +14,8 @@ Its intended purpose is to be a bridge server for services that can only probe c
 ## What is this
 
 This tool is a very simple web server that takes requests on HTTP to check
-whether they are connectable on a provided port. It returns 200 by default if
-the port is connectable and 503 if it isn't.
+whether they are connectable on a provided port. It returns `200 OK` by default if
+the port is connectable and `503 Service Unavailable` if it isn't.
 
 ## Installation
 
