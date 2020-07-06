@@ -25,7 +25,7 @@ impl Drop for ProbyProcess {
 
 #[allow(dead_code)]
 impl ProbyProcess {
-    /// Get a Dummyhttp instance on a free port.
+    /// Get a Proby instance on a free port.
     pub fn new<I, S>(args: I) -> Result<ProbyProcess, Error>
     where
         I: IntoIterator<Item = S> + Clone + std::fmt::Debug,
