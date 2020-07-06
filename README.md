@@ -100,4 +100,5 @@ This is mostly a note for me on how to release this thing:
 - `cargo release --dry-run`
 - `cargo release`
 - Releases will automatically be deployed by Github Actions.
+- Docker images will automatically be built by Docker Hub.
 - Update AUR package.
