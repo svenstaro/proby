@@ -95,8 +95,7 @@ After the build, a binary will appear here: `target/release/proby`.
 
 ## Releasing
 
-This is mostly a note for me on how to release this thing.
-This used to be kind of complicated but now it's just:
+This is mostly a note for me on how to release this thing:
 
 - `cargo release --dry-run`
 - `cargo release`
