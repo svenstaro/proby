@@ -33,7 +33,7 @@ impl<'de> Deserialize<'de> for SocketInfo {
             .as_str()
             .to_socket_addrs()
             .map_err(|_| de::Error::custom("Error while parsing host or port"))?;
-        Ok(SocketInfo {
+        Ok(Self {
             socket_addr: socket_addrs
                 .next()
                 .ok_or_else(|| de::Error::custom("Weird bug happened"))?,
