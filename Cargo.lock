@@ -1263,7 +1263,7 @@ dependencies = [
 
 [[package]]
 name = "proby"
-version = "1.0.1-alpha.0"
+version = "1.0.1"
 dependencies = [
  "actix-rt 1.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-web 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
