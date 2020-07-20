@@ -45,6 +45,12 @@ jobs:
           command: build
           args: --release --locked --target=${{ matrix.target }}
 
+      - name: Compress binaries
+        uses: svenstaro/upx-action@v2
+        with:
+          file: ${{ matrix.artifact_name }}
+          args: --better --lzma
+
       - name: Get tag name
         id: tag_name
         run: |
