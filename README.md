@@ -1,6 +1,6 @@
 # proby
 
-[![GitHub Actions Workflow](https://github.com/svenstaro/proby/workflows/Build/badge.svg)](https://github.com/svenstaro/proby/actions)
+[![CI](https://github.com/svenstaro/proby/workflows/CI/badge.svg)](https://github.com/svenstaro/proby/actions)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/svenstaro/proby)](https://cloud.docker.com/repository/docker/svenstaro/proby/)
 [![AUR](https://img.shields.io/aur/version/proby.svg)](https://aur.archlinux.org/packages/proby/)
 [![Crates.io](https://img.shields.io/crates/v/proby.svg)](https://crates.io/crates/proby)
