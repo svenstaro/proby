@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 
 ## [Unreleased] - ReleaseDate
+
+## [1.0.2] - 2020-08-10
 - Compress release binaries.
 - Bump deps.
 
@@ -27,7 +29,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Switch from Rocket to actix-web to make this work on stable Rust.
 
 <!-- next-url -->
-[Unreleased]: https://github.com/svenstaro/proby/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/svenstaro/proby/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/svenstaro/proby/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/svenstaro/proby/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/svenstaro/proby/compare/0.4.0...v1.0.0
 [0.4.0]: https://github.com/svenstaro/proby/compare/0.3.0...0.4.0
