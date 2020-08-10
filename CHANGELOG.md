@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - ReleaseDate
 - Compress release binaries.
+- Bump deps.
 
 ## [1.0.1] - 2020-07-09
 - Bump deps.
