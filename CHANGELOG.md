@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 
 ## [Unreleased] - ReleaseDate
+- Update to actix-web 3
 
 ## [1.0.2] - 2020-08-10
 - Compress release binaries.
