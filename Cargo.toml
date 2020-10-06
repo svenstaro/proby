@@ -28,5 +28,5 @@ log = "0.4"
 
 [dev-dependencies]
 assert_cmd = "1.0"
-surf = "1"
+surf = "2"
 port_check = "0.1"
