@@ -15,18 +15,18 @@ lto = true
 codegen-units = 1
 
 [dependencies]
-actix-web = "3.3"
-actix-rt = "1.1.1"
+actix-web = "3"
+actix-rt = "1"
 structopt = "0.3"
-anyhow = "1.0"
-serde = "1.0"
-serde_with = "1.6.0"
+anyhow = "1"
+serde = "1"
+serde_with = "1"
 http = "0.2"
 futures = "0.3"
 simplelog = "0.8"
 log = "0.4"
 
 [dev-dependencies]
-assert_cmd = "1.0"
+assert_cmd = "1"
 surf = "2"
 port_check = "0.1"
