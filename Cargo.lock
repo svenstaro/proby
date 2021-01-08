@@ -769,6 +769,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "ctor"
+version = "0.1.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7fbaabec2c953050352311293be5c6aba8e141ba19d6811862b232d6fd020484"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "ctr"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1456,11 +1466,12 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.11"
+version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4fabed175da42fed1fa0746b0ea71f412aa9d35e76e95e59b192c64b9dc2bf8b"
+checksum = "7e3aeeb5dad71cdfb031ff8899db3e3e2bdcbc5abe7ad48e58857e42488dc4aa"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
+ "value-bag",
 ]
 
 [[package]]
@@ -2634,6 +2645,15 @@ dependencies = [
  "matches",
  "percent-encoding",
  "serde",
+]
+
+[[package]]
+name = "value-bag"
+version = "1.0.0-alpha.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2175b4f8663c060f0cd69f5371c1eba1d2eb7845770b7c73593ea08eafb83254"
+dependencies = [
+ "ctor",
 ]
 
 [[package]]
