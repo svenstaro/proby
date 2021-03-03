@@ -872,6 +872,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "dashmap"
+version = "4.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e77a43b28d0668df09411cb0bc9a8c2adc40f9a048afe863e05fd43251e8e39c"
+dependencies = [
+ "cfg-if 1.0.0",
+ "num_cpus",
+]
+
+[[package]]
 name = "data-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1265,12 +1275,14 @@ dependencies = [
 
 [[package]]
 name = "http-client"
-version = "6.2.0"
+version = "6.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "010092b71b94ee49293995625ce7a607778b8b4099c8088fa84fd66bd3e0f21c"
+checksum = "663563ebc56b0bac7e08722cca7742612fd99d9bd6d05cf904ed9d9212065a34"
 dependencies = [
  "async-std",
  "async-trait",
+ "cfg-if 1.0.0",
+ "dashmap",
  "http-types",
  "isahc",
  "log",
@@ -2323,13 +2335,13 @@ checksum = "343f3f510c2915908f155e94f17220b19ccfacf2a64a2a5d8004f2c3e311e7fd"
 
 [[package]]
 name = "surf"
-version = "2.1.0"
+version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7189c787d96fe18fef704950de76d590022d9d70858a4a201e1f07a0666882ea"
+checksum = "2a154d33ca6b5e1fe6fd1c760e5a5cc1202425f6cca2e13229f16a69009f6328"
 dependencies = [
  "async-std",
  "async-trait",
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
  "encoding_rs",
  "futures-util",
  "http-client",
@@ -2337,7 +2349,7 @@ dependencies = [
  "log",
  "mime_guess",
  "once_cell",
- "pin-project-lite 0.1.11",
+ "pin-project-lite 0.2.4",
  "serde",
  "serde_json",
  "web-sys",
