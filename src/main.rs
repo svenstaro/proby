@@ -139,7 +139,7 @@ fn interfaces_to_sockets(interfaces: &[IpAddr], port: u16) -> Result<Vec<SocketA
         .context("Error during creation of sockets from interfaces and port")
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> Result<()> {
     let args = ProbyConfig::from_args();
 
