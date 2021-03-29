@@ -159,6 +159,7 @@ async fn main() -> Result<()> {
         log_level,
         simplelog::Config::default(),
         simplelog::TerminalMode::Mixed,
+        simplelog::ColorChoice::Auto,
     )
     .is_err()
     {
