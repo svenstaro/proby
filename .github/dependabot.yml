@@ -6,12 +6,3 @@ updates:
     interval: daily
     time: "04:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: simplelog
-    versions:
-    - 0.10.0
-  - dependency-name: actix-rt
-    versions:
-    - 2.0.0
-    - 2.0.2
-    - 2.1.0
