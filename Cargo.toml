@@ -16,7 +16,7 @@ codegen-units = 1
 
 [dependencies]
 actix-web = "3"
-actix-rt = "1"
+actix-rt = "2"
 structopt = "0.3"
 anyhow = "1"
 serde = "1"
