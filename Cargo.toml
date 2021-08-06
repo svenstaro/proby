@@ -27,6 +27,6 @@ simplelog = "0.10"
 log = "0.4"
 
 [dev-dependencies]
-assert_cmd = "1"
+assert_cmd = "2"
 surf = "2"
 port_check = "0.1"
