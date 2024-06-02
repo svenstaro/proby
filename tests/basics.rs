@@ -1,9 +1,9 @@
 mod utils;
 
 use assert_cmd::prelude::*;
+use clap::{crate_name, crate_version};
 use std::io::Read;
 use std::process::Command;
-use structopt::clap::{crate_name, crate_version};
 use surf;
 
 use utils::{Error, ProbyProcess};
