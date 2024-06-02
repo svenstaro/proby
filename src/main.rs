@@ -1,17 +1,14 @@
+use std::fmt::Write;
+use std::net::{IpAddr, Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
+use std::time::Duration;
+
 use actix_web::{error, get, web, App, HttpRequest, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
+use clap::Parser;
 use http::StatusCode;
 use log::info;
-use serde::de;
-use serde::Deserialize;
-use serde::Deserializer;
-use std::net::IpAddr;
-use std::net::TcpStream;
-use std::net::ToSocketAddrs;
-use std::net::{Shutdown, SocketAddr};
-use std::time::Duration;
-use structopt::clap::crate_version;
-use structopt::StructOpt;
+use serde::{de, Deserialize, Deserializer};
+use serde_with::{serde_as, DisplayFromStr};
 
 use crate::args::ProbyConfig;
 
@@ -49,24 +46,24 @@ struct FormattedSockets {
 
 #[get("/")]
 async fn usage(sockets: web::Data<FormattedSockets>) -> String {
-    let examples: String = sockets
-        .data
-        .iter()
-        .map(|x| format!("  curl http://{}/example.com:1337\n", x))
-        .collect();
+    let examples: String = sockets.data.iter().fold(String::new(), |mut output, x| {
+        let _ = writeln!(output, "  curl http://{x}/example.com:1337");
+        output
+    });
     format!(
         "proby {version}
 
 Try something like this:
 
 {examples}",
-        version = crate_version!(),
+        version = clap::crate_version!(),
         examples = examples,
     )
 }
 
+#[serde_as]
 #[derive(Debug, Deserialize)]
-struct HttpCode(#[serde(with = "serde_with::rust::display_fromstr")] StatusCode);
+struct HttpCode(#[serde_as(as = "DisplayFromStr")] StatusCode);
 
 #[derive(Debug, Deserialize)]
 struct CheckHostPortOptions {
@@ -141,7 +138,7 @@ fn interfaces_to_sockets(interfaces: &[IpAddr], port: u16) -> Result<Vec<SocketA
 
 #[actix_web::main]
 async fn main() -> Result<()> {
-    let args = ProbyConfig::from_args();
+    let args = ProbyConfig::parse();
 
     let socket_addresses = interfaces_to_sockets(&args.interfaces, args.port)?;
 
@@ -167,7 +164,7 @@ async fn main() -> Result<()> {
             .expect("Couldn't initialize logger")
     }
 
-    info!("proby {version}", version = crate_version!(),);
+    info!("proby {version}", version = clap::crate_version!(),);
     HttpServer::new(move || {
         App::new()
             .data(args.clone())
