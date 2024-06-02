@@ -1,3 +1,7 @@
+use std::fmt::Write;
+use std::net::{IpAddr, Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
+use std::time::Duration;
+
 use actix_web::{error, get, web, App, HttpRequest, HttpResponse, HttpServer};
 use anyhow::{Context, Result};
 use http::StatusCode;
@@ -5,11 +9,6 @@ use log::info;
 use serde::de;
 use serde::Deserialize;
 use serde::Deserializer;
-use std::net::IpAddr;
-use std::net::TcpStream;
-use std::net::ToSocketAddrs;
-use std::net::{Shutdown, SocketAddr};
-use std::time::Duration;
 use structopt::clap::crate_version;
 use structopt::StructOpt;
 
@@ -49,11 +48,10 @@ struct FormattedSockets {
 
 #[get("/")]
 async fn usage(sockets: web::Data<FormattedSockets>) -> String {
-    let examples: String = sockets
-        .data
-        .iter()
-        .map(|x| format!("  curl http://{}/example.com:1337\n", x))
-        .collect();
+    let examples: String = sockets.data.iter().fold(String::new(), |mut output, x| {
+        let _ = writeln!(output, "  curl http://{x}/example.com:1337");
+        output
+    });
     format!(
         "proby {version}
 
