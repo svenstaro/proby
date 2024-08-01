@@ -15,13 +15,13 @@ lto = true
 codegen-units = 1
 
 [dependencies]
-actix-web = "3"
-actix-rt = "1"
+actix-web = "4"
+actix-rt = "2"
 clap = { version = "4", features = ["derive", "cargo", "wrap_help", "env"] }
 anyhow = "1"
 serde = "1"
 serde_with = "3"
-http = "0.2"
+http = "1.1"
 futures = "0.3"
 simplelog = "0.12"
 log = "0.4"
